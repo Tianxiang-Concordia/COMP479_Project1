@@ -17,7 +17,7 @@ of each of the following scripts to know what to code. But DO NOT ATTEMPT TO MOD
 
 Implementation of each python script mentioned above should be completed within the python function stubs created for you
 in the following file. You can create additional functions than the one created for you to write any reusable code.
-    - solutions.py 
+    - solutions.py
 
 Since each block-*.py file expects specific output structure of the values passed out of each script there are some
 pre-built simple testcases in assert.py file to help you understand your mistake. Read through the assert messages
@@ -36,38 +36,23 @@ for others these parameters are optional. Parameters you can pass in and descrip
 
 
 ##### Commands ###################
-Sample commands to show different options of running the scripts. 
+Sample commands to show different options of running the scripts.
 
 Running python scripts with default functionality
 --------------------------------------------------------------------
-python ./block-1-reader.py --path <Reuters folder path>
-python ./block-1-reader.py --path <Reuters folder path> | python ./block-2-document-segmenter.py
-python ./block-1-reader.py --path <Reuters folder path> | python ./block-2-document-segmenter.py | python ./block-3-extractor.py
-python ./block-1-reader.py --path <Reuters folder path> | python ./block-2-document-segmenter.py | python ./block-3-extractor.py | python ./block-4-tokenizer.py
-python ./block-1-reader.py --path <Reuters folder path> | python ./block-2-document-segmenter.py | python ./block-3-extractor.py | python ./block-4-tokenizer.py | python ./block-5-stemmer.py
-python ./block-1-reader.py --path <Reuters folder path> | python ./block-2-document-segmenter.py | python ./block-3-extractor.py | python ./block-4-tokenizer.py | python ./block-5-stemmer.py | python ./block-6-stopwords-removal.py
+python ./block-1-reader.py --path ./reuters21578
+python ./block-1-reader.py --path ./reuters21578 | python ./block-2-document-segmenter.py
+python ./block-1-reader.py --path ./reuters21578 | python ./block-2-document-segmenter.py | python ./block-3-extractor.py
+python ./block-1-reader.py --path ./reuters21578 | python ./block-2-document-segmenter.py | python ./block-3-extractor.py | python ./block-4-tokenizer.py
+python ./block-1-reader.py --path ./reuters21578 | python ./block-2-document-segmenter.py | python ./block-3-extractor.py | python ./block-4-tokenizer.py | python ./block-5-stemmer.py
+python ./block-1-reader.py --path ./reuters21578 | python ./block-2-document-segmenter.py | python ./block-3-extractor.py | python ./block-4-tokenizer.py | python ./block-5-stemmer.py | python ./block-6-stopwords-removal.py
 
 
 Running python scripts to save intermediary results as text files:
 ---------------------------------------------------------------------
-python ./block-1-reader.py --path <Reuters folder path> -o block1.json
-python ./block-1-reader.py --path <Reuters folder path> | python .block-2-document-segmenter.py -o block2.json
-OR 
-python ./block-1-reader.py --path ./Reuters --output_file block1.json
-python ./block-1-reader.py --path <Reuters folder path> | python .block-2-document-segmenter.py --output_file block2.json
-
-
-Using intermediary results output from the previous block as an input into the current block.
-----------------------------------------------------------------------------------------------------------
+python ./block-1-reader.py --path ./reuters21578 -o block1.json
 python ./block-2-document-segmenter.py -i block1.json -o block2.json
 python ./block-3-extractor.py -i block2.json -o block3.json
-OR
-python ./block-2-document-segmenter.py -input_file block1.json --output_file block2.json
-python ./block-3-extractor.py -input_file block2.json --output_file block3.json
-
-
-Optional for block 6. If you wish to pass a stopwords list from an external file, use the following:
------------------------------------------------------------------------------------------------------------
-python ./block-6-stopwords-removal.py -s <Stopwords file path>
-OR
-python ./block-6-stopwords-removal.py --stopwords <Stopwords file path>
+python ./block-4-tokenizer.py -i block3.json -o block4.json
+python ./block-5-stemmer.py -i block4.json -o block6.json
+python ./block-6-stopwords-removal.py -s stopword_list.txt

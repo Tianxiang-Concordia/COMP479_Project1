@@ -9,69 +9,67 @@ Delete "Delete this block first" code stub after writing solutions to each funct
 Write you code within the "WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv" code stub. Variable created within this stub are just
 for example to show what is expected to be returned. You CAN modify them according to your preference.
 """
+import os
+import re
+import nltk
 
 
 def block_reader(path):
-    # Delete this block first
-    raise NotImplementedError("Please implement your solution in block_reader function in solutions.py")
-    # ##############
-
-    # WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv
-    reuters_file_content = 'your file content should be here'
-    yield reuters_file_content
-    # WRITE YOUR CODE HERE ^^^^^^^^^^^^^^^^
+    files = os.listdir(path)
+    for file in files:
+        if re.match('.+\\.sgm', file):
+            reuters_file_content = open(path + '/' + file, 'r', encoding='iso8859').read()
+            yield reuters_file_content
 
 
 def block_document_segmenter(INPUT_STRUCTURE):
-    # Delete this block first
-    raise NotImplementedError("Please implement your solution in block_document_segmenter function in solutions.py")
-    # ##############
-
-    # WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv
-    document_text = 'your document content should be here'
-    yield document_text
-    # WRITE YOUR CODE HERE ^^^^^^^^^^^^^^^^
+    regexp = re.compile('<REUTERS.*?</REUTERS>', re.S)
+    for item in INPUT_STRUCTURE:
+        document_text_list = regexp.findall(item)
+        for document_text in document_text_list:
+            yield document_text
 
 
 def block_extractor(INPUT_STRUCTURE):
-    # Delete this block first
-    raise NotImplementedError("Please implement your solution in block_extractor function in solutions.py")
-    # ##############
+    id_regexp = re.compile('(?<=NEWID=\")\\d+(?=\")', re.S)
+    text_regexp = re.compile('(?<=<BODY>).*(?=</BODY>)', re.S)
 
-    # WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv
-    content_dict = {"ID": 123, "TEXT": "news text"}  # Sample dictionary structure of output
-    yield content_dict
-    # WRITE YOUR CODE HERE ^^^^^^^^^^^^^^^^
+    for item in INPUT_STRUCTURE:
+        news_id_list = id_regexp.findall(item)
+        text_list = text_regexp.findall(item)
+        new_id = news_id_list[0] if len(news_id_list) != 0 else ''
+        text = text_list[0] if len(text_list) != 0 else ''
+        content_dict = {"ID": new_id, "TEXT": text}
+        if int(content_dict['ID']) <= 5:
+            yield content_dict
 
 
 def block_tokenizer(INPUT_STRUCTURE):
-    # Delete this block first
-    raise NotImplementedError("Please implement your solution in block_tokenizer function in solutions.py")
-    # ##############
-
-    # WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv
-    token_tuple = ('id', 'token')  # Sample id, token tuple structure of output
-    yield token_tuple
-    # WRITE YOUR CODE HERE ^^^^^^^^^^^^^^^^
+    for item in INPUT_STRUCTURE:
+        text = item['TEXT']
+        tokens = nltk.word_tokenize(text)
+        for token in tokens:
+            token_tuple = (item['ID'], token)
+            yield token_tuple
 
 
 def block_stemmer(INPUT_STRUCTURE):
-    # Delete this block first
-    raise NotImplementedError("Please implement your solution in block_stemmer function in solutions.py")
-    # ##############
-
-    # WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv
-    token_tuple = ('id', 'token')  # Sample id, token tuple structure of output
-    yield token_tuple
-    # WRITE YOUR CODE HERE ^^^^^^^^^^^^^^^^
+    porter = nltk.PorterStemmer()
+    for item in INPUT_STRUCTURE:
+        token = porter.stem(item[1])
+        token_tuple = (item[0], token)
+        yield token_tuple
 
 
 def block_stopwords_removal(INPUT_STRUCTURE, stopwords):
-    # Delete this block first
-    raise NotImplementedError("Please implement your solution in block_stopwords_removal function in solutions.py")
-    # ##############
+    def is_in_stopword_list(item):
+        stopwords_list = stopwords.split("\n")
+        if item[1] in stopwords_list:
+            return False
+        else:
+            return True
 
-    # WRITE YOUR CODE HERE vvvvvvvvvvvvvvvv
-    token_tuple = ('id', 'token')  # Sample id, token tuple structure of output
-    yield token_tuple
-    # WRITE YOUR CODE HERE ^^^^^^^^^^^^^^^^
+    it = filter(is_in_stopword_list, INPUT_STRUCTURE)
+
+    for item in tuple(it):
+        yield item
